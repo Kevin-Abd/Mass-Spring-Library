@@ -1,13 +1,27 @@
-﻿using System;
-using System.Numerics;
-
-namespace Mass_Spring_Library
+﻿namespace MassSpringLibrary
 {
+	using System.Numerics;
+
 	public class Mass
 	{
+		/// <summary>
+		/// Denotes the Postion of the Mass as a <see cref="Vector3"/>
+		/// </summary>
 		public Vector3 Position { get; private set; }
+
+		/// <summary>
+		/// Denotes the Speed of the Mass as a <see cref="Vector3"/>
+		/// </summary>
 		public Vector3 Speed { get; private set; }
+
+		/// <summary>
+		/// Denotes the Acceleration of the Mass as a <see cref="Vector3"/>
+		/// </summary>
 		public Vector3 Acceleration { get; private set; }
+
+		/// <summary>
+		/// Denotes the Force of the Mass as a <see cref="Vector3"/>
+		/// </summary>
 		public Vector3 Force { get; private set; }
 
 		public bool AxisXLock { get; set; }
@@ -57,12 +71,29 @@ namespace Mass_Spring_Library
 			AxisZLock = axisZLock;
 		}
 
-		public void Update(Vector3 force, float dt)
+		/// <summary>
+		/// updates Force, Accelration, Speed and Position
+		/// </summary>
+		/// <param name="force">force applied to the mass</param>
+		/// <param name="dt">Delta Time</param>
+		public void UpdateAll(Vector3 force, float dt)
 		{
 			UpdateForce(force);
 			UpdateAcceleration();
 			UpdateSpeed(dt);
 			UpdatePostion(dt);
+		}
+
+		/// <summary>
+		/// updates Force, Accelration and Speed. Does not update the Position
+		/// </summary>
+		/// <param name="force">force applied to the mass</param>
+		/// <param name="dt">Delta Time</param>
+		public void UpdateFAS(Vector3 force, float dt)
+		{
+			UpdateForce(force);
+			UpdateAcceleration();
+			UpdateSpeed(dt);
 		}
 
 		public void UpdateForce(Vector3 force)
