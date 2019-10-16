@@ -6,7 +6,7 @@
 	{
 		/// <summary>
 		/// updates the Forces of <see cref="Mass"/>es attached to this spring with the given dt.
-		/// Uses <see cref="Mass.UpdateForce(Vector3)"/>.
+		/// Uses <see cref="Mass.AddForce(Vector3)"/>.
 		/// </summary>
 		/// <param name="spring">the spring</param>
 		public static void Update(this Spring spring)
@@ -20,8 +20,8 @@
 			Vector3 v2v1 = spring.Mass2ForceVector;
 			float force = spring.Force;
 
-			spring.mass1.UpdateForce(v1v2 * force);
-			spring.mass2.UpdateForce(v2v1 * force);
+			spring.mass1.AddForce(v1v2 * force);
+			spring.mass2.AddForce(v2v1 * force);
 		}
 
 	}

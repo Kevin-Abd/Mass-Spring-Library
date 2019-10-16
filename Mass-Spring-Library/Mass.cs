@@ -7,26 +7,28 @@
 		/// <summary>
 		/// Denotes the Postion of the Mass as a <see cref="Vector3"/>
 		/// </summary>
-		public Vector3 Position { get; private set; }
+		public Vector3 Position { get; set; }
 
 		/// <summary>
 		/// Denotes the Speed of the Mass as a <see cref="Vector3"/>
 		/// </summary>
-		public Vector3 Speed { get; private set; }
+		public Vector3 Speed { get; set; }
 
 		/// <summary>
 		/// Denotes the Acceleration of the Mass as a <see cref="Vector3"/>
 		/// </summary>
-		public Vector3 Acceleration { get; private set; }
+		public Vector3 Acceleration { get; set; }
 
 		/// <summary>
 		/// Denotes the Force of the Mass as a <see cref="Vector3"/>
 		/// </summary>
-		public Vector3 Force { get; private set; }
+		public Vector3 Force { get;  set; }
 
 		public bool AxisXLock { get; set; }
 		public bool AxisYLock { get; set; }
 		public bool AxisZLock { get; set; }
+
+		public bool HighFriction { get; set; }
 
 		private readonly float mass;
 
@@ -38,7 +40,8 @@
 			Vector3 position,
 			bool axisXLock = false,
 			bool axisYLock = false,
-			bool axisZLock = false)
+			bool axisZLock = false,
+			bool highFriction = true)
 		{
 			this.mass = mass;
 
@@ -50,6 +53,8 @@
 			AxisXLock = axisXLock;
 			AxisYLock = axisYLock;
 			AxisZLock = axisZLock;
+
+			HighFriction = highFriction;
 		}
 
 		public Mass(
@@ -57,7 +62,8 @@
 			Vector3 position,
 			bool axisXLock = false,
 			bool axisYLock = false,
-			bool axisZLock = false)
+			bool axisZLock = false,
+			bool highFriction = true)
 		{
 			this.mass = mass;
 
@@ -69,6 +75,8 @@
 			AxisXLock = axisXLock;
 			AxisYLock = axisYLock;
 			AxisZLock = axisZLock;
+
+			HighFriction = highFriction;
 		}
 
 		/// <summary>
@@ -78,37 +86,27 @@
 		/// <param name="dt">Delta Time</param>
 		public void UpdateAll(Vector3 force, float dt)
 		{
-			UpdateForce(force);
+			AddForce(force);
 			UpdateAcceleration();
 			UpdateSpeed(dt);
 			UpdatePostion(dt);
 		}
 
-		/// <summary>
-		/// updates Force, Accelration and Speed. Does not update the Position
-		/// </summary>
-		/// <param name="force">force applied to the mass</param>
-		/// <param name="dt">Delta Time</param>
-		public void UpdateFAS(Vector3 force, float dt)
-		{
-			UpdateForce(force);
-			UpdateAcceleration();
-			UpdateSpeed(dt);
-		}
 
-		public void UpdateForce(Vector3 force)
+		public void AddForce(Vector3 force)
 		{
 			Force += force;
 		}
 
 		public void UpdateAcceleration()
 		{
-			Acceleration += Force / mass;
+			Acceleration = Force / mass + ( HighFriction ? Vector3.Zero : Acceleration);
+			Force = HighFriction ? Vector3.Zero : Force;
 		}
 
 		public void UpdateSpeed(float dt)
 		{
-			Vector3 tmpSpeed = Speed + (Acceleration * dt);
+			Vector3 tmpSpeed = (Acceleration * dt) + (HighFriction ? Vector3.Zero : Speed);
 
 			if (AxisXLock)
 			{
