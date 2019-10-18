@@ -9,7 +9,7 @@
 		/// Uses <see cref="Mass.AddForce(Vector3)"/>.
 		/// </summary>
 		/// <param name="spring">the spring</param>
-		public static void Update(this Spring spring)
+		public static void AddForcesToMasses(this Spring spring)
 		{
 			if ( spring == null)
 			{

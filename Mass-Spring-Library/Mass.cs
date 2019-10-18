@@ -28,8 +28,6 @@
 		public bool AxisYLock { get; set; }
 		public bool AxisZLock { get; set; }
 
-		public bool HighFriction { get; set; }
-
 		private readonly float mass;
 
 		public Mass(
@@ -40,8 +38,7 @@
 			Vector3 position,
 			bool axisXLock = false,
 			bool axisYLock = false,
-			bool axisZLock = false,
-			bool highFriction = true)
+			bool axisZLock = false)
 		{
 			this.mass = mass;
 
@@ -53,8 +50,6 @@
 			AxisXLock = axisXLock;
 			AxisYLock = axisYLock;
 			AxisZLock = axisZLock;
-
-			HighFriction = highFriction;
 		}
 
 		public Mass(
@@ -63,20 +58,17 @@
 			bool axisXLock = false,
 			bool axisYLock = false,
 			bool axisZLock = false,
-			bool highFriction = true)
+			bool highFriction = false)
+			: this(
+				  mass,
+				  Vector3.Zero,
+				  Vector3.Zero,
+				  Vector3.Zero,
+				  position,
+				  axisXLock,
+				  axisYLock,
+				  axisZLock)
 		{
-			this.mass = mass;
-
-			Force = Vector3.Zero;
-			Acceleration = Vector3.Zero;
-			Speed = Vector3.Zero;
-			Position = position;
-
-			AxisXLock = axisXLock;
-			AxisYLock = axisYLock;
-			AxisZLock = axisZLock;
-
-			HighFriction = highFriction;
 		}
 
 		/// <summary>
@@ -98,13 +90,13 @@
 			Force += force;
 		}
 
-		public void UpdateAcceleration()
+		public void UpdateAcceleration(bool resetForce = false)
 		{
-			Acceleration = Force / mass + ( HighFriction ? Vector3.Zero : Acceleration);
-			Force = HighFriction ? Vector3.Zero : Force;
+			Acceleration = Force / mass;
+			Force = resetForce ? Vector3.Zero : Force;
 		}
 
-		public void UpdateSpeed(float dt)
+		public void UpdateSpeed(float dt, bool HighFriction = false)
 		{
 			Vector3 tmpSpeed = (Acceleration * dt) + (HighFriction ? Vector3.Zero : Speed);
 

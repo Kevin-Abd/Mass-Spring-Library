@@ -148,7 +148,7 @@ namespace UnitTest
 			v2 = new Mass(1, new Vector3(2, 0, 0), false, false, false);
 			Spring spring = new Spring(v1, v2, constant, lenMod);
 
-			spring.Update();
+			spring.AddForcesToMasses();
 
 			Assert.AreEqual(constant * (1 - lenMod) * 2, v1.Force.X, 0.001f);
 			Assert.AreEqual(-1 * constant * (1 - lenMod) * 2, v2.Force.X, 0.001f);
